@@ -1,0 +1,29 @@
+name: Post Cat Photo from Pinterest
+
+on:
+  schedule:
+    - cron: '0 10,15,20 * * *'  # Каждый день в 13:00, 18:00, 23:00 по Москве
+  workflow_dispatch:  # Можно запустить вручную
+
+jobs:
+  post-cat:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Run bot
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python main.py
