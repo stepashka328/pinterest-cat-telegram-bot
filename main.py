@@ -1,3 +1,4 @@
+import random
 import os
 import json
 import requests
@@ -7,10 +8,10 @@ TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
 # Описание под фото (МОЖЕТЕ ИЗМЕНИТЬ)
-CAPTION = """🐱 Случайный котик дня!
+EMOJIS = ['🐱', '😻', '🐾', '😹']
+CAPTION = f"""{random.choice(EMOJIS)} <a href="https://t.me/catseverydayes">Котики дня</a>
 
-#коты #котики #cats #cute #мемы
-"""
+Предложка 👉 <a href="https://t.me/catseverydayes_bot">@catseverydayes_bot</a>"""
 
 # Память опубликованных ссылок (защита от повторов)
 FILE_PATH = 'posted.json'
