@@ -2,8 +2,12 @@ name: Post Cat Photo from Pinterest
 
 on:
   schedule:
-        - cron: '0 7,10,13,16 * * *'
-  workflow_dispatch:  # Можно запустить вручную
+    - cron: '0 7,10,13,16 * * *'  # 10:00, 13:00, 16:00, 19:00 по Москве
+  workflow_dispatch:
+
+# 🔥 Важно: даём права на запись в репозиторий
+permissions:
+  contents: write
 
 jobs:
   post-cat:
@@ -12,6 +16,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Важно для корректной работы git push
       
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -27,3 +33,12 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python main.py
+      
+      # 🔥 НОВЫЙ ШАГ: Сохраняем posted.json в репозиторий
+      - name: Commit posted.json updates
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add posted.json
+          git commit -m "💾 Update posted list [skip ci]" || echo "No changes to commit"
+          git push
